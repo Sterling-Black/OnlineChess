@@ -56,7 +56,7 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect",(reason)=>{
     let rom = rooms[socket.id];
-    // clients[clients.indexOf()];
+    clients[clients.indexOf()];
     console.log('A user got disconnected\n');
     console.log('Room: '+rom);
     socket.to(rom).emit("op-disconnect");

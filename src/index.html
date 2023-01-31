@@ -155,9 +155,8 @@
     let Cdot = "<div class='Cdot'>·</div>"
     let movesMade = 0;
 
-    const socket = io("/");
-
-
+    
+    
 
     let player1='w';
     let player2='b';
@@ -169,11 +168,14 @@
     let Ctype = 0;
     
     function online(){
+        const socket = io("/");
+        
         document.querySelector(".body").style.display = "none";
         
-        
+        console.log("yo");
 
         socket.on("connect",()=>{
+
             console.log("you are connected");
 
             // waitOpponent();
@@ -232,6 +234,8 @@
 
     }
     function offline2(){
+        const socket = io("/");
+
         document.querySelector(".body").style.display = "none";
         aiMode=true;
         disc=true;
@@ -240,6 +244,7 @@
         online1V1(socket);
     }
     function offline1(){
+        const socket = io("/");
         document.querySelector(".body").style.display = "none";
         aiMode=false;
         disc=true;
