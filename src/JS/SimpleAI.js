@@ -1,19 +1,154 @@
 
 
     
-const chess = new Chess();
 
-function online1V1(){
+function online1V1(chess){
+
+
+
+// AI implementation
+
+
+function chessAi(){
+    //2. Generate all possible moves
+    var moves = chess.moves();
+
+    // 3. Evaluate the positions
+    var evaluations = [];
+    for (var i = 0; i < moves.length; i++) {
+        var move = moves[i];
+        chess.move(move);
+        var evaluation = evaluatePosition(chess.board());
+        evaluations.push({ move: move, evaluation: evaluation });
+        chess.undo();
+    }
+
+    // 4. Select the best move
+    var bestMove = null;
+    var bestEvaluation = Number.NEGATIVE_INFINITY;
+    for (var i = 0; i < evaluations.length; i++) {
+        var evaluation = evaluations[i].evaluation;
+        if (evaluation > bestEvaluation) {
+            bestEvaluation = evaluation;
+            bestMove = evaluations[i].move;
+        }
+    }
+
+
+    // 5. Play the move
+    chess.move(bestMove);
+
+}
+
+
+function evaluatePosition(board) {
+    var materialAdvantage = 0;
+    var mobility = 0;
+    var centerControl = 0;
+
+    // 1. Evaluate material advantage
+    for (var i = 0; i < 8; i++) {
+        for (var j = 0; j < 8; j++) {
+            var piece = board[i][j];
+            if (piece) {
+                materialAdvantage += pieceValue(piece.type);
+            }
+        }
+    }
+
+    // 2. Evaluate mobility
+    var possibleMoves = generatePossibleMoves(board);
+    mobility = possibleMoves.length;
+
+    // 3. Evaluate center control
+    var centerSquares = [
+    board[3][3], board[3][4], board[4][3], board[4][4]
+    ];
+    for (var i = 0; i < centerSquares.length; i++) {
+        var piece = centerSquares[i];
+        if (piece) {
+            centerControl += pieceValue(piece.type);
+        }
+    }
+
+    // 4. Combine evaluations
+    var evaluation = materialAdvantage + mobility + centerControl;
+    return evaluation;
+}
+
+function pieceValue(pieceType) {
+    switch (pieceType) {
+        case 'p': return 1;
+        case 'n': return 3;
+        case 'b': return 3;
+        case 'r': return 5;
+        case 'q': return 9;
+        default: return 0;
+    }
+}
+
+function generatePossibleMoves() {
+// Your code to generate all possible moves for the current player
+// ...
+return chess.moves();
+
+}
+
+
+
+
+refresh();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     let mov;
     let dotted = [];
     let eatable = false;
+    
     
     
     socket.on("op-disconnect",()=>{
         alert("Your opponent went offline");
         console.log("Your opponent is offline");
         aiMode=true;
-        startGame();
+        exit();
     });
     
     function play(file) {
@@ -383,95 +518,6 @@ function online1V1(){
 
 
 
-
-
-// AI implementation
-
-
-function chessAi(){
-    //2. Generate all possible moves
-    var moves = chess.moves();
-
-    // 3. Evaluate the positions
-    var evaluations = [];
-    for (var i = 0; i < moves.length; i++) {
-        var move = moves[i];
-        chess.move(move);
-        var evaluation = evaluatePosition(chess.board());
-        evaluations.push({ move: move, evaluation: evaluation });
-        chess.undo();
-    }
-
-    // 4. Select the best move
-    var bestMove = null;
-    var bestEvaluation = Number.NEGATIVE_INFINITY;
-    for (var i = 0; i < evaluations.length; i++) {
-        var evaluation = evaluations[i].evaluation;
-        if (evaluation > bestEvaluation) {
-            bestEvaluation = evaluation;
-            bestMove = evaluations[i].move;
-        }
-    }
-
-
-    // 5. Play the move
-    chess.move(bestMove);
-
-}
-
-
-function evaluatePosition(board) {
-    var materialAdvantage = 0;
-    var mobility = 0;
-    var centerControl = 0;
-
-    // 1. Evaluate material advantage
-    for (var i = 0; i < 8; i++) {
-        for (var j = 0; j < 8; j++) {
-            var piece = board[i][j];
-            if (piece) {
-                materialAdvantage += pieceValue(piece.type);
-            }
-        }
-    }
-
-    // 2. Evaluate mobility
-    var possibleMoves = generatePossibleMoves(board);
-    mobility = possibleMoves.length;
-
-    // 3. Evaluate center control
-    var centerSquares = [
-    board[3][3], board[3][4], board[4][3], board[4][4]
-    ];
-    for (var i = 0; i < centerSquares.length; i++) {
-        var piece = centerSquares[i];
-        if (piece) {
-            centerControl += pieceValue(piece.type);
-        }
-    }
-
-    // 4. Combine evaluations
-    var evaluation = materialAdvantage + mobility + centerControl;
-    return evaluation;
-}
-
-function pieceValue(pieceType) {
-    switch (pieceType) {
-        case 'p': return 1;
-        case 'n': return 3;
-        case 'b': return 3;
-        case 'r': return 5;
-        case 'q': return 9;
-        default: return 0;
-    }
-}
-
-function generatePossibleMoves(board) {
-// Your code to generate all possible moves for the current player
-// ...
-return chess.moves();
-
-}
 
 
 

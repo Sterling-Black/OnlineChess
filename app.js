@@ -1,4 +1,5 @@
 const express = require("express");
+const { stat } = require("fs");
 const app = express();
 const path = require("path");
 
@@ -8,7 +9,9 @@ const io = require("socket.io")(server, { cors: { origin: "*"}});
 
 let online = [];
 let room , searching=false, searchingID;
-let rooms = [], names = [];
+let rooms = [], names = [], nm = [];
+let nameArr=[];
+let status=[], i=0, statusID=[];
 
 
 app.use(express.static(path.join(__dirname,"src")));
@@ -21,27 +24,58 @@ server.listen(process.env.PORT||3000,()=>{
 })
 
 io.on("connection", (socket) => {
+  online.push(socket.id);
+
+ 
+
+  // socket.emit("success",socket.id);
   
+  socket.on("empty-names",()=>{
+    names=[];
+    nameArr=[];
+    online=[];
+    status=[];
+    i=0;    
+    console.log("clear all");
+    io.emit("check-online");
+  });
 
   socket.on("name-submit",(name)=>{
     names.push(name);
-    console.log(names);
-    io.emit("users-online",names);
+    online.push(socket.id);
+    nameArr[socket.id] = name;
+    if(!statusID[socket.id]||statusID[socket.id]=="online"){
+      status.push("online");
+    }else{
+      status.push(statusID[socket.id]);
+    }
+    io.emit("users-online",names,status);
   });
-  socket.emit("success",socket.id);
-  online.push(socket.id);
-  socket.broadcast.emit("msg","a user just came online");
+  
 
 
   socket.on("disconnect",(reason)=>{
     const index = online.indexOf(socket.id);
     online.splice(index,index);
-    io.emit("users-online",names);
+    const index1 = names.indexOf(nameArr[socket.id]);
+    names.splice(index1,index1);
+    status.splice(index1,index1);
+    statusID[socket.id]="";
+    console.log(names);
+    io.emit("users-online",names,status);
   });
 
   
 
   socket.on("SRC-OP",()=>{
+
+    socket.on("searching",()=>{
+      const index1 = names.indexOf(nameArr[socket.id]);
+      status[index1]="searching"; 
+      statusID[socket.id]="searching";
+      io.emit("users-online",names,status);
+    })
+    
     if(online.length<=1){
       const numOfOponents = 0;
       console.log("not enough users");
@@ -52,6 +86,7 @@ io.on("connection", (socket) => {
       socket.emit("num-of-users",numOfOponents);
       
       let playerNum;
+
       
       if(searching==false){
         searching=true;
@@ -71,13 +106,20 @@ io.on("connection", (socket) => {
       }
       
       rooms[socket.id] = room;
-    
-    
-      io.to(room).emit("player-num",playerNum,room);
+      nm.push(nameArr[socket.id]);
       
+      io.to(room).emit("player-num",playerNum,room,nm);
+      
+      socket.on("playing",()=>{
+        const index1 = names.indexOf(nameArr[socket.id]);
+        status[index1]="playing";
+        statusID[socket.id]="playing";
+        io.emit("users-online",names,status);
+      });
+
+
       socket.on("mov",(mov,rom)=>{
         console.log(mov,rom);
-        // io.to(room).except(socket.id).emit("r-mov",mov);
         socket.to(rom).emit("r-mov",mov);
       })
     
@@ -93,7 +135,11 @@ io.on("connection", (socket) => {
         const rom = rooms[socket.id];
         const index = online.indexOf(socket.id);
         online.splice(index,index);
-        io.emit("users-online",names);
+        const index1 = names.indexOf(nameArr[socket.id]);
+        names.splice(index1,index1);
+        status.splice(index1,index1);
+        statusID[socket.id]="";
+        io.emit("users-online",names,status);
         console.log('A user got disconnected');
         console.log('In Room: '+rom+'\n');
         io.to(rom).emit("op-disconnect");

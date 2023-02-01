@@ -20,8 +20,8 @@
             <div class="options">
                 <div class="left">
                     <h1>Players online:</h1>
-                    <ul id="users">
-                    </ul>
+                    <div id="users">
+                    </div>
                 </div>
                 <div class="right">
                     <h1>Game Mode:</h1>
@@ -32,125 +32,137 @@
                 </div>
             </div>
         </div>
-        <section class="chess-board">
+        <div id="chess-game">
+            <div class="opponent">
+                <img src="images/user1.png" />
+                <h1 class="name2">AI</h1>
+                <button onclick="exit()" class="exit">Exit</button>
+            </div>
+            <section class="chess-board">
+    
+                <!-- Y = Vertical-axis   X = Horizontal-axis -->
+                <div id="top">
+                    <div class="y"><span>A</span></div>
+                    <div class="y"><span>B</span></div>
+                    <div class="y"><span>C</span></div>
+                    <div class="y"><span>D</span></div>
+                    <div class="y"><span>E</span></div>
+                    <div class="y"><span>F</span></div>
+                    <div class="y"><span>G</span></div>
+                    <div class="y"><span>H</span></div>
+                </div>
+                <div id="right">
+                    <div class="x"><span>8</span></div>
+                    <div class="x"><span>7</span></div>
+                    <div class="x"><span>6</span></div>
+                    <div class="x"><span>5</span></div>
+                    <div class="x"><span>4</span></div>
+                    <div class="x"><span>3</span></div>
+                    <div class="x"><span>2</span></div>
+                    <div class="x"><span>1</span></div>
+                </div>
+                <div id="bottom">
+                    <div class="y"><span>A</span></div>
+                    <div class="y"><span>B</span></div>
+                    <div class="y"><span>C</span></div>
+                    <div class="y"><span>D</span></div>
+                    <div class="y"><span>E</span></div>
+                    <div class="y"><span>F</span></div>
+                    <div class="y"><span>G</span></div>
+                    <div class="y"><span>H</span></div>
+                </div>
+                <div id="left">
+                    <div class="x"><span>8</span></div>
+                    <div class="x"><span>7</span></div>
+                    <div class="x"><span>6</span></div>
+                    <div class="x"><span>5</span></div>
+                    <div class="x"><span>4</span></div>
+                    <div class="x"><span>3</span></div>
+                    <div class="x"><span>2</span></div>
+                    <div class="x"><span>1</span></div>
+                </div>
+                
+                <div class="chess-ground"><!-- Where the pawns move -->
+                    <div class="box a" id="a8"><img src="images/Rock1.png" class="peice rock b" id="rb1"></div>
+                    <div class="box d" id="b8"><img src="images/Knight1.png" class="peice knight b" id="nb1"></div>
+                    <div class="box a" id="c8"><img src="images/Bishop1.png" class="peice bishop b" id="bb1"></div>
+                    <div class="box d" id="d8"><img src="images/Queen1.png" class="peice queen b" id="qb"></div>
+                    <div class="box a" id="e8"><img src="images/King1.png" class="peice king b" id="kb"></div>
+                    <div class="box d" id="f8"><img src="images/Bishop1.png" class="peice bishop b" id="bb2"></div>
+                    <div class="box a" id="g8"><img src="images/Knight1.png" class="peice knight b" id="nb2"></div>
+                    <div class="box d" id="h8"><img src="images/Rock1.png" class="peice rock b" id="rb2"></div>
+                    <!-- First row -->
+                    <div class="box d" id="a7"><img src="images/Pawn1.png" class="peice pawn b" id="pb1"></div>
+                    <div class="box a" id="b7"><img src="images/Pawn1.png" class="peice pawn b" id="pb2"></div>
+                    <div class="box d" id="c7"><img src="images/Pawn1.png" class="peice pawn b" id="pb3"></div>
+                    <div class="box a" id="d7"><img src="images/Pawn1.png" class="peice pawn b" id="pb4"></div>
+                    <div class="box d" id="e7"><img src="images/Pawn1.png" class="peice pawn b" id="pb5"></div>
+                    <div class="box a" id="f7"><img src="images/Pawn1.png" class="peice pawn b" id="pb6"></div>
+                    <div class="box d" id="g7"><img src="images/Pawn1.png" class="peice pawn b" id="pb7"></div>
+                    <div class="box a" id="h7"><img src="images/Pawn1.png" class="peice pawn b" id="pb8"></div>
+                    <!-- Second row -->
+                    <div class="box a" id="a6"></div>
+                    <div class="box d" id="b6"></div>
+                    <div class="box a" id="c6"></div>
+                    <div class="box d" id="d6"></div>
+                    <div class="box a" id="e6"></div>
+                    <div class="box d" id="f6"></div>
+                    <div class="box a" id="g6"></div>
+                    <div class="box d" id="h6"></div>
+                    <!-- Third row -->
+                    <div class="box d" id="a5"></div>
+                    <div class="box a" id="b5"></div>
+                    <div class="box d" id="c5"></div>
+                    <div class="box a" id="d5"></div>
+                    <div class="box d" id="e5"></div>
+                    <div class="box a" id="f5"></div>
+                    <div class="box d" id="g5"></div>
+                    <div class="box a" id="h5"></div>
+                    <!-- Fourth row -->
+                    <div class="box a" id="a4"></div>
+                    <div class="box d" id="b4"></div>
+                    <div class="box a" id="c4"></div>
+                    <div class="box d" id="d4"></div>
+                    <div class="box a" id="e4"></div>
+                    <div class="box d" id="f4"></div>
+                    <div class="box a" id="g4"></div>
+                    <div class="box d" id="h4"></div>
+                    <!-- Fifth row -->
+                    <div class="box d" id="a3"></div>
+                    <div class="box a" id="b3"></div>
+                    <div class="box d" id="c3"></div>
+                    <div class="box a" id="d3"></div>
+                    <div class="box d" id="e3"></div>
+                    <div class="box a" id="f3"></div>
+                    <div class="box d" id="g3"></div>
+                    <div class="box a" id="h3"></div>
+                    <!-- Sixth row -->
+                    <div class="box a" id="a2"><img src="images/Pawn2.png" class="peice pawn w" id="pw1"></div>
+                    <div class="box d" id="b2"><img src="images/Pawn2.png" class="peice pawn w" id="pw2"></div>
+                    <div class="box a" id="c2"><img src="images/Pawn2.png" class="peice pawn w" id="pw3"></div>
+                    <div class="box d" id="d2"><img src="images/Pawn2.png" class="peice pawn w" id="pw4"></div>
+                    <div class="box a" id="e2"><img src="images/Pawn2.png" class="peice pawn w" id="pw5"></div>
+                    <div class="box d" id="f2"><img src="images/Pawn2.png" class="peice pawn w" id="pw6"></div>
+                    <div class="box a" id="g2"><img src="images/Pawn2.png" class="peice pawn w" id="pw7"></div>
+                    <div class="box d" id="h2"><img src="images/Pawn2.png" class="peice pawn w" id="pw8"></div>
+                    <!-- Seventh row -->
+                    <div class="box d" id="a1"><img src="images/Rock2.png" class="peice rock w" id="rw1"></div>
+                    <div class="box a" id="b1"><img src="images/Knight2.png" class="peice knight w" id="nw1"></div>
+                    <div class="box d" id="c1"><img src="images/Bishop2.png" class="peice bishop w" id="bw1"></div>
+                    <div class="box a" id="d1"><img src="images/Queen2.png" class="peice queen w" id="qw"></div>
+                    <div class="box d" id="e1"><img src="images/King2.png" class="peice king w" id="kw"></div>
+                    <div class="box a" id="f1"><img src="images/Bishop2.png" class="peice bishop w" id="bw2"></div>
+                    <div class="box d" id="g1"><img src="images/Knight2.png" class="peice knight w" id="nw2"></div>
+                    <div class="box a" id="h1"><img src="images/Rock2.png" class="peice rock w" id="rw2"></div>
+                    <!-- Eigth row -->
+                </div>
+            </section>
+            <div class="you">
+                <img src="images/user1.png" />
+                <h1 class="name1">Me</h1>
 
-            <!-- Y = Vertical-axis   X = Horizontal-axis -->
-            <div id="top">
-                <div class="y"><span>A</span></div>
-                <div class="y"><span>B</span></div>
-                <div class="y"><span>C</span></div>
-                <div class="y"><span>D</span></div>
-                <div class="y"><span>E</span></div>
-                <div class="y"><span>F</span></div>
-                <div class="y"><span>G</span></div>
-                <div class="y"><span>H</span></div>
             </div>
-            <div id="right">
-                <div class="x"><span>8</span></div>
-                <div class="x"><span>7</span></div>
-                <div class="x"><span>6</span></div>
-                <div class="x"><span>5</span></div>
-                <div class="x"><span>4</span></div>
-                <div class="x"><span>3</span></div>
-                <div class="x"><span>2</span></div>
-                <div class="x"><span>1</span></div>
-            </div>
-            <div id="bottom">
-                <div class="y"><span>A</span></div>
-                <div class="y"><span>B</span></div>
-                <div class="y"><span>C</span></div>
-                <div class="y"><span>D</span></div>
-                <div class="y"><span>E</span></div>
-                <div class="y"><span>F</span></div>
-                <div class="y"><span>G</span></div>
-                <div class="y"><span>H</span></div>
-            </div>
-            <div id="left">
-                <div class="x"><span>8</span></div>
-                <div class="x"><span>7</span></div>
-                <div class="x"><span>6</span></div>
-                <div class="x"><span>5</span></div>
-                <div class="x"><span>4</span></div>
-                <div class="x"><span>3</span></div>
-                <div class="x"><span>2</span></div>
-                <div class="x"><span>1</span></div>
-            </div>
-            
-            <div class="chess-ground"><!-- Where the pawns move -->
-                <div class="box a" id="a8"><img src="images/Rock1.png" class="peice rock b" id="rb1"></div>
-                <div class="box d" id="b8"><img src="images/Knight1.png" class="peice knight b" id="nb1"></div>
-                <div class="box a" id="c8"><img src="images/Bishop1.png" class="peice bishop b" id="bb1"></div>
-                <div class="box d" id="d8"><img src="images/Queen1.png" class="peice queen b" id="qb"></div>
-                <div class="box a" id="e8"><img src="images/King1.png" class="peice king b" id="kb"></div>
-                <div class="box d" id="f8"><img src="images/Bishop1.png" class="peice bishop b" id="bb2"></div>
-                <div class="box a" id="g8"><img src="images/Knight1.png" class="peice knight b" id="nb2"></div>
-                <div class="box d" id="h8"><img src="images/Rock1.png" class="peice rock b" id="rb2"></div>
-                <!-- First row -->
-                <div class="box d" id="a7"><img src="images/Pawn1.png" class="peice pawn b" id="pb1"></div>
-                <div class="box a" id="b7"><img src="images/Pawn1.png" class="peice pawn b" id="pb2"></div>
-                <div class="box d" id="c7"><img src="images/Pawn1.png" class="peice pawn b" id="pb3"></div>
-                <div class="box a" id="d7"><img src="images/Pawn1.png" class="peice pawn b" id="pb4"></div>
-                <div class="box d" id="e7"><img src="images/Pawn1.png" class="peice pawn b" id="pb5"></div>
-                <div class="box a" id="f7"><img src="images/Pawn1.png" class="peice pawn b" id="pb6"></div>
-                <div class="box d" id="g7"><img src="images/Pawn1.png" class="peice pawn b" id="pb7"></div>
-                <div class="box a" id="h7"><img src="images/Pawn1.png" class="peice pawn b" id="pb8"></div>
-                <!-- Second row -->
-                <div class="box a" id="a6"></div>
-                <div class="box d" id="b6"></div>
-                <div class="box a" id="c6"></div>
-                <div class="box d" id="d6"></div>
-                <div class="box a" id="e6"></div>
-                <div class="box d" id="f6"></div>
-                <div class="box a" id="g6"></div>
-                <div class="box d" id="h6"></div>
-                <!-- Third row -->
-                <div class="box d" id="a5"></div>
-                <div class="box a" id="b5"></div>
-                <div class="box d" id="c5"></div>
-                <div class="box a" id="d5"></div>
-                <div class="box d" id="e5"></div>
-                <div class="box a" id="f5"></div>
-                <div class="box d" id="g5"></div>
-                <div class="box a" id="h5"></div>
-                <!-- Fourth row -->
-                <div class="box a" id="a4"></div>
-                <div class="box d" id="b4"></div>
-                <div class="box a" id="c4"></div>
-                <div class="box d" id="d4"></div>
-                <div class="box a" id="e4"></div>
-                <div class="box d" id="f4"></div>
-                <div class="box a" id="g4"></div>
-                <div class="box d" id="h4"></div>
-                <!-- Fifth row -->
-                <div class="box d" id="a3"></div>
-                <div class="box a" id="b3"></div>
-                <div class="box d" id="c3"></div>
-                <div class="box a" id="d3"></div>
-                <div class="box d" id="e3"></div>
-                <div class="box a" id="f3"></div>
-                <div class="box d" id="g3"></div>
-                <div class="box a" id="h3"></div>
-                <!-- Sixth row -->
-                <div class="box a" id="a2"><img src="images/Pawn2.png" class="peice pawn w" id="pw1"></div>
-                <div class="box d" id="b2"><img src="images/Pawn2.png" class="peice pawn w" id="pw2"></div>
-                <div class="box a" id="c2"><img src="images/Pawn2.png" class="peice pawn w" id="pw3"></div>
-                <div class="box d" id="d2"><img src="images/Pawn2.png" class="peice pawn w" id="pw4"></div>
-                <div class="box a" id="e2"><img src="images/Pawn2.png" class="peice pawn w" id="pw5"></div>
-                <div class="box d" id="f2"><img src="images/Pawn2.png" class="peice pawn w" id="pw6"></div>
-                <div class="box a" id="g2"><img src="images/Pawn2.png" class="peice pawn w" id="pw7"></div>
-                <div class="box d" id="h2"><img src="images/Pawn2.png" class="peice pawn w" id="pw8"></div>
-                <!-- Seventh row -->
-                <div class="box d" id="a1"><img src="images/Rock2.png" class="peice rock w" id="rw1"></div>
-                <div class="box a" id="b1"><img src="images/Knight2.png" class="peice knight w" id="nw1"></div>
-                <div class="box d" id="c1"><img src="images/Bishop2.png" class="peice bishop w" id="bw1"></div>
-                <div class="box a" id="d1"><img src="images/Queen2.png" class="peice queen w" id="qw"></div>
-                <div class="box d" id="e1"><img src="images/King2.png" class="peice king w" id="kw"></div>
-                <div class="box a" id="f1"><img src="images/Bishop2.png" class="peice bishop w" id="bw2"></div>
-                <div class="box d" id="g1"><img src="images/Knight2.png" class="peice knight w" id="nw2"></div>
-                <div class="box a" id="h1"><img src="images/Rock2.png" class="peice rock w" id="rw2"></div>
-                <!-- Eigth row -->
-            </div>
-        </section>
+        </div>
         <div class="loading">
             <h1>Searching for an Opponent...<br>please be patient</h1>
             
@@ -165,9 +177,9 @@
     let dot = "<div class='dot'>·</div>";
     let Cdot = "<div class='Cdot'>·</div>"
     let movesMade = 0;
-
     
     let names = prompt("Enter a player name");
+    let us = [];
 
     let player1='w';
     let player2='b';
@@ -181,25 +193,31 @@
 
     const socket = io("/");
 
-    // socket.on("connect",()=>{
 
-        
-    // })
-    socket.emit("name-submit",names);
-
-    socket.on("users-online",(names)=>{
-        const y = document.querySelector("ul");
-        y.innerHTML="";
-        names.forEach(name=>{
-            y.innerHTML += "<li>"+name+"</li>";
-            console.log(name);
-        })
+    socket.on("connect",()=>{
+        socket.emit("empty-names");
+    })
+    socket.on("check-online",()=>{
+        console.log("check-online");
+        socket.emit("name-submit",names);
     });
 
-    socket.on("msg",(a)=>{
-        console.log(a);
-    })
-    socket.on("success",(id)=>{
+    // socket.emit("name-submit",names);    
+
+    socket.on("users-online",(names,status)=>{
+        console.log(names);
+        console.log(status);
+        const y = document.querySelector("#users");
+        y.innerHTML="";
+        names.forEach((name,index)=>{
+            let x=name;
+            if(name.length>8){
+                x = name.slice(0,8)+"...";
+            }
+            y.innerHTML += "<div class='user'><img src='images/user.png'><div id='user'>"+x+"</div>      <div class='status'>"+status[index]+"</div></div>";
+        })
+    });
+    socket.on("success",()=>{
         console.log("you successfully connected to server");
     });
 
@@ -217,10 +235,12 @@
             document.querySelector(".body").style.display = "none";
 
 
+            socket.emit("searching");
 
             let timer = 0;
             document.querySelector(".loading").style.display = "inline-block";
-            socket.on("player-num",(playerNum, rom)=>{
+            // document.querySelector("#chess-game").style.display = "none";
+            socket.on("player-num",(playerNum, rom, nm)=>{
                 r00m++;
                 room = rom;
                 if(r00m==1){
@@ -231,22 +251,29 @@
                         player2='w';
                         document.querySelector(".loading").style.display = "none";
                         document.querySelector(".chess-board").style.transform = "rotate(180deg)";
+                        document.querySelector(".name1").innerHTML = nm[1];
+                        document.querySelector(".name2").innerHTML = nm[0];
                         document.querySelectorAll(".box img").forEach(elem=>{
                             elem.style.transform = "rotate(180deg)";
                         })
                         document.querySelectorAll("span").forEach(elem=>{
                             elem.style.transform = "rotate(180deg)";
                         })
-
-                        online1V1();
+                        socket.emit("playing");
+                        
+                        const chess = new Chess();
+                        online1V1(chess);
                         clearInterval(InId);
 
                     }
                 }else if(r00m==2){//if your Opponent is present
                     console.log("you are the frist player player");
                     document.querySelector(".loading").style.display = "none";
-
-                    online1V1();
+                    document.querySelector(".name1").innerHTML = nm[0];
+                    document.querySelector(".name2").innerHTML = nm[1];
+                    socket.emit("playing");
+                    const chess = new Chess();
+                    online1V1(chess);
                     clearInterval(InId);
 
                 }
@@ -259,13 +286,14 @@
                     aiMode=true;
                     disc=true;
                     document.querySelector(".loading").style.display = "none";
-                    online1V1();
+                    const chess = new Chess();
+                    online1V1(chess);
                     socket.disconnect();
                     
                 }
             },1000);
 
-            document.querySelector(".chess-board").style.display = "inline-block";
+            document.querySelector("#chess-game").style.display = "inline-block";
             
             }
         });
@@ -276,9 +304,10 @@
         document.querySelector(".body").style.display = "none";
         aiMode=true;
         disc=true;
-        document.querySelector(".chess-board").style.display = "inline-block";
+        document.querySelector("#chess-game").style.display = "inline-block";
         socket.disconnect();
-        online1V1();
+        const chess = new Chess();
+        online1V1(chess);
     }
 
     function offline1(){
@@ -286,9 +315,23 @@
         document.querySelector(".body").style.display = "none";
         aiMode=false;
         disc=true;
-        document.querySelector(".chess-board").style.display = "inline-block";
+        document.querySelector("#chess-game").style.display = "inline-block";
         socket.disconnect();
-        online1V1();
+        const chess = new Chess();
+        online1V1(chess);
+    }
+
+    function exit(){
+        socket.disconnect()
+        player1='w';
+        player2='b';
+        disc=false;
+        aiMode = false;
+        r00m = 0, room;
+        castel = true;
+        Ctype = 0;
+        document.querySelector(".body").style.display = "inline-block";
+        document.querySelector("#chess-game").style.display = "none";
     }
 
 </script>

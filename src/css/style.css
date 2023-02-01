@@ -12,13 +12,15 @@ body{
     align-items: center;
     justify-content: center;
 }
-.table-img{
+
+#chess-game{
+    position: relative;
     height: 100%;
     width: 100%;
+    display: none;
 }
 .chess-board{
     /* transform: rotate(180deg); */
-    display: none;
     position: relative;
     font-size: 1rem;
     height: 99vh;
@@ -48,8 +50,22 @@ body{
     background-image: url('../images/BG3.jpg');
 }
 
-
-
+.opponent{
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    text-align: center;
+    color: #fff;
+}
+.you{
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    text-align: center;
+    color: #fff;
+}
 
 .y{
     text-align: center;
@@ -171,6 +187,23 @@ body{
     cursor: pointer;
 }
 
+.exit{
+    width: 150px;
+    height: 50px;
+    border: none;
+    border-radius: 15px;
+    background-color: #a6633d;
+    color: #fff;
+}
+.exit:hover{
+    background-color: #f0ba57;
+    color: #000;
+}
+.exit:active{
+    background-color: #a6633d;
+    color: #fff;
+}
+
 .body{
     color: #fff;
     /* font-family: sans-serif; */
@@ -179,30 +212,48 @@ body{
 }
 
 .left{
-    width: auto;
+    width: fit-content;
     display: inline-block;
+
 }
 .right{
     height: 100%;
     display: inline-block;
 }
-.left ul{
-    width: 100%;
+#users{
+    width: 80%;
     display: inline-block;
     font-size: 1rem;
     font-weight: lighter;
-    list-style-position: inside;
     text-align: left;
     padding: 0 10px;
 }
-li{
+.left .user{
     display: block;
     width: 100%;
     text-align: left;
-    font-style: italic;
-    color: #47eb6b;
+    color: #fff;
+    border-bottom: #000000 2px solid;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    padding: 3px 0;
 }
-
+.left h1{
+    margin-top: 0;
+}
+#user{
+    display: inline-block;
+    width: auto;
+    padding: 5px 0;
+}
+.status{
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    top: 25%;
+    color: #01a124;
+}
 
 
 
@@ -222,6 +273,9 @@ a:hover{
     text-align: center;
     background-color: #294d7ca1;
     position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 15;
     color: aliceblue;
     height: 100%;
     width: 100%;
@@ -244,6 +298,28 @@ a:hover{
         .chess-ground{
             border: 1px solid  #000000;
         }
+        .exit{
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 0;
+        }
+        .table{
+            display: block;
+            height: 149%;
+        }
+        .opponent,.you{
+            height: 150px;
+            margin: 10px 0 0;
+            position: static;
+            z-index: 10;
+            display: block;
+            text-align: center;
+        }
+        .opponent img,.you img{
+            width: 80px;
+            height: 80px;
+        }
     }
     
     .options{
@@ -255,9 +331,9 @@ a:hover{
         .y, .x{
             font-size: 1em;
         }
-        /* .dot, .Cdot{
+        .dot, .Cdot{
             font-size: 4.2rem;
-        } */
+        }
         
     }
 }
