@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chess</title>
 	<link rel="icon" href="images/icon.png"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <script src="JS/jquery-3.6.1.min.js"></script>
     <script src="JS/chess.js"></script>
@@ -15,10 +18,18 @@
         <div class="body">
             <h1>Welcome to the Chess Game made by Sterling Black</h1>
             <div class="options">
-                <button onclick="online()">Online <br>p1Vp2</button>
-                <button onclick="offline1()">Offline <br>p1Vp2</button>
-                <button onclick="offline2()">Offline <br>p1Vpc</button>
-                <div><a href="https://sterling-black.github.io/cv/">about developer</a></div>
+                <div class="left">
+                    <h1>Players online:</h1>
+                    <ul id="users">
+                    </ul>
+                </div>
+                <div class="right">
+                    <h1>Game Mode:</h1>
+                    <button onclick="online()">Online <br>p1Vp2</button>
+                    <button onclick="offline1()">Offline <br>p1Vp2</button>
+                    <button onclick="offline2()">Offline <br>p1Vpc</button>
+                    <div><a href="https://sterling-black.github.io/cv/">about developer</a></div>
+                </div>
             </div>
         </div>
         <section class="chess-board">
@@ -64,7 +75,7 @@
                 <div class="x"><span>2</span></div>
                 <div class="x"><span>1</span></div>
             </div>
-           
+            
             <div class="chess-ground"><!-- Where the pawns move -->
                 <div class="box a" id="a8"><img src="images/Rock1.png" class="peice rock b" id="rb1"></div>
                 <div class="box d" id="b8"><img src="images/Knight1.png" class="peice knight b" id="nb1"></div>
@@ -156,39 +167,66 @@
     let movesMade = 0;
 
     
-    
+    let names = prompt("Enter a player name");
 
     let player1='w';
     let player2='b';
-    let who = true, disc=false;
+    let disc=false;
     let aiMode = false;
-    let r00m = [], room;
+    let r00m = 0, room;
 
     let castel = true;
     let Ctype = 0;
-    
+
+
+    const socket = io("/");
+
+    // socket.on("connect",()=>{
+
+        
+    // })
+    socket.emit("name-submit",names);
+
+    socket.on("users-online",(names)=>{
+        const y = document.querySelector("ul");
+        y.innerHTML="";
+        names.forEach(name=>{
+            y.innerHTML += "<li>"+name+"</li>";
+            console.log(name);
+        })
+    });
+
+    socket.on("msg",(a)=>{
+        console.log(a);
+    })
+    socket.on("success",(id)=>{
+        console.log("you successfully connected to server");
+    });
+
     function online(){
-        const socket = io("/");
-        
-        document.querySelector(".body").style.display = "none";
-        
-        console.log("yo");
+        socket.emit("SRC-OP");
+        console.log("Searching for an opponent");
 
-        socket.on("connect",()=>{
+        socket.on("num-of-users",(numOfOpponents)=>{
+            if(numOfOpponents<=0){
+                console.log("not enough users");
+                alert("no opponent is online right now");
+                socket.off("num-of-users");
+            }else{
 
-            console.log("you are connected");
+            document.querySelector(".body").style.display = "none";
 
-            // waitOpponent();
+
 
             let timer = 0;
             document.querySelector(".loading").style.display = "inline-block";
             socket.on("player-num",(playerNum, rom)=>{
-                r00m.push(rom);
-                if(r00m.length==1){
+                r00m++;
+                room = rom;
+                if(r00m==1){
                     console.log(playerNum, rom);
                     if(playerNum==2){//if you are the second player
                         console.log("you are the second player");
-                        who=false;
                         player1='b';
                         player2='w';
                         document.querySelector(".loading").style.display = "none";
@@ -200,27 +238,28 @@
                             elem.style.transform = "rotate(180deg)";
                         })
 
-                        online1V1(socket);
+                        online1V1();
                         clearInterval(InId);
+
                     }
-                }else if(r00m.length==2){//second player present
+                }else if(r00m==2){//if your Opponent is present
                     console.log("you are the frist player player");
                     document.querySelector(".loading").style.display = "none";
-                    online1V1(socket);
+
+                    online1V1();
                     clearInterval(InId);
 
                 }
-                room = r00m[0];
             });
             let InId = setInterval(()=>{
                 timer++;
                 console.log(timer);
-                if(timer==25){
+                if(timer==120){
                     clearInterval(InId);
                     aiMode=true;
                     disc=true;
                     document.querySelector(".loading").style.display = "none";
-                    online1V1(socket);
+                    online1V1();
                     socket.disconnect();
                     
                 }
@@ -228,29 +267,28 @@
 
             document.querySelector(".chess-board").style.display = "inline-block";
             
-            
+            }
         });
-
-
     }
+
     function offline2(){
-        const socket = io("/");
 
         document.querySelector(".body").style.display = "none";
         aiMode=true;
         disc=true;
         document.querySelector(".chess-board").style.display = "inline-block";
         socket.disconnect();
-        online1V1(socket);
+        online1V1();
     }
+
     function offline1(){
-        const socket = io("/");
+
         document.querySelector(".body").style.display = "none";
         aiMode=false;
         disc=true;
         document.querySelector(".chess-board").style.display = "inline-block";
         socket.disconnect();
-        online1V1(socket);
+        online1V1();
     }
 
 </script>

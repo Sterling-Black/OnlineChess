@@ -2,6 +2,7 @@ body{
     margin: 0;
     padding: 0;
     /* overflow: hidden; */
+    font-family: 'Raleway', sans-serif;
 }
 .table{
     height: 102vh;
@@ -136,46 +137,14 @@ body{
 }
 
 
-@media screen and (max-width: 800px) {
-    @media screen and (max-height: 1000px){
-        .chess-board{
-            width: 100vw;
-            height: 100vw;
-           
-        }
-        .chess-ground{
-            border: 1px solid  #000000;
-        }
-    }
-    
-    
-
-    @media screen and (max-width: 720px) {
-        .y, .x{
-            font-size: 1em;
-        }
-        .dot, .Cdot{
-            font-size: 4.2rem;
-        }
-    }
-}
-@media screen and (max-height: 600px){
-    .chess-ground{
-        border: 1px solid  #000000;
-    }
-    .dot, .Cdot{
-        font-size: 4.2rem;
-    }
-}
-
-
-
 
 .options{
     background-color: #383030;
     padding: 20px 10px;
     border-radius: 5px;
     text-align: center;
+    display: grid;
+    grid-template-columns: 1fr 4fr;
 }
 
 .options button{
@@ -204,17 +173,45 @@ body{
 
 .body{
     color: #fff;
-    font-family: sans-serif;
+    /* font-family: sans-serif; */
     text-align: center;
+    display: grid;
 }
 
-h1,h2{
-    margin: 90px 10px 40px 10px;
+.left{
+    width: auto;
+    display: inline-block;
+}
+.right{
+    height: 100%;
+    display: inline-block;
+}
+.left ul{
+    width: 100%;
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: lighter;
+    list-style-position: inside;
+    text-align: left;
+    padding: 0 10px;
+}
+li{
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-style: italic;
+    color: #47eb6b;
 }
 
+
+
+
+h1{
+    font-size: 2.4rem;
+}
 a{
     text-decoration: none;
-    color: #00bd3f;
+    color: #05cccc;
 }
 a:hover{
     text-decoration: none;
@@ -228,9 +225,48 @@ a:hover{
     color: aliceblue;
     height: 100%;
     width: 100%;
-    font-family: sans-serif;
+    /* font-family: sans-serif; */
     font-size: 2rem;
     display: grid;
     align-items: center;
     display: none;
+}
+
+
+
+@media screen and (max-width: 800px) {
+    @media screen and (max-height: 1000px){
+        .chess-board{
+            width: 100vw;
+            height: 100vw;
+           
+        }
+        .chess-ground{
+            border: 1px solid  #000000;
+        }
+    }
+    
+    .options{
+        display: inline-block;
+    }
+    
+
+    @media screen and (max-width: 720px) {
+        .y, .x{
+            font-size: 1em;
+        }
+        /* .dot, .Cdot{
+            font-size: 4.2rem;
+        } */
+        
+    }
+}
+
+@media screen and (max-height: 600px){
+    .chess-ground{
+        border: 1px solid  #000000;
+    }
+    /* .dot, .Cdot{
+        font-size: 4.2rem;
+    } */
 }

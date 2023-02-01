@@ -1,9 +1,9 @@
 
 
-const chess = new Chess();
     
+const chess = new Chess();
 
-function online1V1(socket){
+function online1V1(){
     let mov;
     let dotted = [];
     let eatable = false;
@@ -29,9 +29,7 @@ function online1V1(socket){
     document.querySelectorAll(".box").forEach(elem=>{
         elem.addEventListener("click",()=>{
             id = elem.id;
-            // console.log(dotted);
             if(dotted){
-                // console.log(dotted);
                 dotted.forEach(dots=>{
                     if(dots==id){
                         if(Ctype==0){
@@ -124,6 +122,32 @@ function online1V1(socket){
     });
     
     
+    
+    
+    
+    socket.on("r-mov",(mov,cas)=>{
+        console.log("opponent has played");
+        if(chess.turn()==player2&&!aiMode){
+            console.log("op has played");
+            chess.move(mov);
+            if(cas){
+                chess.move(mov);
+            }
+            refresh();
+            movesMade++;
+            endCheck();
+            play("Sound/move.mp3");
+            startGame();
+        }else{
+            socket.on("op-disconnect",()=>{
+                console.log("Your opponent is offline");
+                aiMode=true;
+                startGame();
+            });
+        }
+    });
+
+
     function resolveAfter2Seconds() {
         return new Promise(resolve => {
           setTimeout(() => {
@@ -142,31 +166,6 @@ function online1V1(socket){
         await resolveAfter2Seconds();
     }
     
-    
-    socket.on("r-mov",(mov,cas)=>{
-        if(chess.turn()==player2&&!aiMode&&!who){
-            who=true;
-            console.log("op has played");
-            chess.move(mov);
-            if(cas){
-                chess.move(mov);
-            }
-            refresh();
-            movesMade++;
-            endCheck();
-            play("Sound/move.mp3");
-            startGame();
-        }else{
-            who=false;
-            socket.on("op-disconnect",()=>{
-                console.log("Your opponent is offline");
-                aiMode=true;
-                startGame();
-            });
-        }
-    
-    });
-    
     async function startGame(){
         
         
@@ -174,8 +173,6 @@ function online1V1(socket){
             if(!chess.in_checkmate()){
                 if(aiMode){
                     asyncCall();
-                }else{
-                    console.log("AI-MODE off");
                 }
             }
         }
