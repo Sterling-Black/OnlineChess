@@ -55,6 +55,8 @@ io.on("connection", (socket) => {
 
 
   socket.on("disconnect",(reason)=>{
+    const index2 = nm.indexOf(nameArr[socket.id]);
+    nm.splice(index2,index2);
     const index = online.indexOf(socket.id);
     online.splice(index,index);
     const index1 = names.indexOf(nameArr[socket.id]);
@@ -110,6 +112,10 @@ io.on("connection", (socket) => {
       
       io.to(room).emit("player-num",playerNum,room,nm);
       
+      if(nm.length>=2){
+        nm = [];
+      }
+      
       socket.on("playing",()=>{
         const index1 = names.indexOf(nameArr[socket.id]);
         status[index1]="playing";
@@ -132,6 +138,9 @@ io.on("connection", (socket) => {
         if(searchingID==socket.id){//if you are the one searching
           searching=false;
         }
+        // nm.push(nameArr[socket.id]);
+        const index2 = nm.indexOf(nameArr[socket.id]);
+        nm.splice(index2,index2);
         const rom = rooms[socket.id];
         const index = online.indexOf(socket.id);
         online.splice(index,index);

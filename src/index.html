@@ -224,6 +224,7 @@
     function online(){
         socket.emit("SRC-OP");
         console.log("Searching for an opponent");
+        document.querySelector(".exit").style.display = "none";
 
         socket.on("num-of-users",(numOfOpponents)=>{
             if(numOfOpponents<=0){
