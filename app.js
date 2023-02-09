@@ -9,9 +9,9 @@ const io = require("socket.io")(server, { cors: { origin: "*"}});
 
 let online = [];
 let room , searching=false, searchingID;
-let rooms = [], names = [], nm = [];
+let rooms = [], names = [], nm = [], user=[], srchQuery=[];
 let nameArr=[];
-let status=[], i=0, statusID=[];
+let status=[], i=0;
 
 
 app.use(express.static(path.join(__dirname,"src")));
@@ -28,54 +28,65 @@ io.on("connection", (socket) => {
 
  
 
-  // socket.emit("success",socket.id);
+  socket.emit("success",socket.id);
   
   socket.on("empty-names",()=>{
     names=[];
     nameArr=[];
     online=[];
     status=[];
+    user=[];
     i=0;    
     console.log("clear all");
     io.emit("check-online");
   });
 
-  socket.on("name-submit",(name)=>{
-    names.push(name);
-    online.push(socket.id);
-    nameArr[socket.id] = name;
-    if(!statusID[socket.id]||statusID[socket.id]=="online"){
-      status.push("online");
+  socket.on("name-submit",(users)=>{
+    const {name, statu} = users;
+    if(name=="Guest"){
+      names.push("Guest");
+      nameArr[socket.id] = "Guest";
     }else{
-      status.push(statusID[socket.id]);
+      names.push(name);
+      nameArr[socket.id] = name;
     }
-    io.emit("users-online",names,status);
+    console.log(users);
+    online.push(socket.id);
+    status.push(statu);
+    user.push(users);
+    io.emit("users-online",user);
   });
   
-
-
+  
+  
   socket.on("disconnect",(reason)=>{
-    const index2 = nm.indexOf(nameArr[socket.id]);
-    nm.splice(index2,index2);
+    console.log("012");
     const index = online.indexOf(socket.id);
     online.splice(index,index);
-    const index1 = names.indexOf(nameArr[socket.id]);
-    names.splice(index1,index1);
-    status.splice(index1,index1);
-    statusID[socket.id]="";
-    console.log(names);
-    io.emit("users-online",names,status);
+    user = user.filter(usr => usr.id != socket.id);
+    
+    if(searchingID==socket.id&&searching){//if you are the one searching
+      room = "";
+      searching=false;
+      srchQuery = [];
+    }
+    
+    console.log(names,user);
+    
+    io.emit("users-online",user);
   });
 
   
 
-  socket.on("SRC-OP",()=>{
+  socket.on("SRC-OP",(theUser)=>{
 
     socket.on("searching",()=>{
-      const index1 = names.indexOf(nameArr[socket.id]);
-      status[index1]="searching"; 
-      statusID[socket.id]="searching";
-      io.emit("users-online",names,status);
+      user.forEach(usr => {
+        if(usr.id == socket.id){
+          usr.statu = "searching";
+        }
+      });
+      io.emit("users-online",user);
     })
     
     if(online.length<=1){
@@ -83,12 +94,13 @@ io.on("connection", (socket) => {
       console.log("not enough users");
       socket.emit("num-of-users",numOfOponents);
     }else{
-      console.log("enough users");
+      console.log("enough users searching...");
       const numOfOponents = online.length-1;
       socket.emit("num-of-users",numOfOponents);
       
       let playerNum;
-
+      
+      srchQuery.push(theUser);
       
       if(searching==false){
         searching=true;
@@ -96,31 +108,34 @@ io.on("connection", (socket) => {
         searchingID=socket.id;
         room = socket.id+1;//+1 to make it unique
       }else{
+        
         playerNum = 2;
         searching = false;
       }
       socket.join(room);
       
       if(playerNum==1){
-        console.log("num=1 room:"+room+"\n");
+        console.log("player1 room:"+room+" is ready\n");
       }else if(playerNum==2){
-        console.log("num=2 room:"+room+"\n");
+        console.log("player2 room:"+room+" is ready\n the game can start");
       }
+
       
       rooms[socket.id] = room;
-      nm.push(nameArr[socket.id]);
       
-      io.to(room).emit("player-num",playerNum,room,nm);
+      io.to(room).emit("player-num",playerNum,room,srchQuery);
       
-      if(nm.length>=2){
-        nm = [];
+      if(srchQuery.length>=2){
+        srchQuery = [];
       }
       
       socket.on("playing",()=>{
-        const index1 = names.indexOf(nameArr[socket.id]);
-        status[index1]="playing";
-        statusID[socket.id]="playing";
-        io.emit("users-online",names,status);
+        user.forEach(usr => {
+          if(usr.id == socket.id){
+            usr.statu = "playing";
+          }
+        });
+        io.emit("users-online",user);
       });
 
 
@@ -133,22 +148,23 @@ io.on("connection", (socket) => {
         console.log(mov,cas,rom);
         socket.to(rom).emit("r-mov",mov,cas);
       })
-    
+      // socket.off("disconnect");``
       socket.on("disconnect",(reason)=>{
-        if(searchingID==socket.id){//if you are the one searching
-          searching=false;
-        }
-        // nm.push(nameArr[socket.id]);
-        const index2 = nm.indexOf(nameArr[socket.id]);
-        nm.splice(index2,index2);
+        // if(searchingID==socket.id){//if you are the one searching
+        //   searching=false;
+        //   srchQuery = [];
+        // }
+        // user.forEach((usr)=>{
+        //   if(usr.id==socket.id&&user.statu=="playing"&&!srchQuery){
+        //     searching=false;
+        //   }
+        // });
+
+        // console.log("345");
+        // const index = online.indexOf(socket.id);
+        // online.splice(index,index);
+        // io.emit("users-online",user);
         const rom = rooms[socket.id];
-        const index = online.indexOf(socket.id);
-        online.splice(index,index);
-        const index1 = names.indexOf(nameArr[socket.id]);
-        names.splice(index1,index1);
-        status.splice(index1,index1);
-        statusID[socket.id]="";
-        io.emit("users-online",names,status);
         console.log('A user got disconnected');
         console.log('In Room: '+rom+'\n');
         io.to(rom).emit("op-disconnect");

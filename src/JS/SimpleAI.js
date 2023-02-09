@@ -147,7 +147,6 @@ refresh();
     socket.on("op-disconnect",()=>{
         alert("Your opponent went offline");
         console.log("Your opponent is offline");
-        aiMode=true;
         exit();
     });
     

@@ -178,9 +178,9 @@
     let Cdot = "<div class='Cdot'>·</div>"
     let movesMade = 0;
     
-    let names = prompt("Enter a player name");
+    
     let us = [];
-
+    
     let player1='w';
     let player2='b';
     let disc=false;
@@ -189,40 +189,59 @@
 
     let castel = true;
     let Ctype = 0;
+    
+    
+    
+    let socket = io("/");
+    let names = prompt("Enter a player name");
+    
+    
+    const user = {
+        name: names,
+        statu: "online",
+        room: "",
+        opponent: "",
+        gNum: "",
+        id: "", 
+    }
 
+    socket.on("success",(id)=>{
+        console.log("you successfully connected to server");
+        user.id = id;
+        if(!user.name){
+            user.name="Guest"+user.id.slice(0,3);
+        }
 
-    const socket = io("/");
-
-
+    });
+    
     socket.on("connect",()=>{
         socket.emit("empty-names");
-    })
+    });
     socket.on("check-online",()=>{
         console.log("check-online");
-        socket.emit("name-submit",names);
+        socket.emit("name-submit",user);
     });
 
     // socket.emit("name-submit",names);    
 
-    socket.on("users-online",(names,status)=>{
-        console.log(names);
-        console.log(status);
+    socket.on("users-online",(users)=>{
+
         const y = document.querySelector("#users");
         y.innerHTML="";
-        names.forEach((name,index)=>{
-            let x=name;
-            if(name.length>8){
-                x = name.slice(0,8)+"...";
+        users.forEach((user)=>{
+            // console.log(user);
+            let x=user.name;
+            if(x.length>8){
+                x = x.slice(0,8)+"...";
             }
-            y.innerHTML += "<div class='user'><img src='images/user.png'><div id='user'>"+x+"</div>      <div class='status'>"+status[index]+"</div></div>";
-        })
-    });
-    socket.on("success",()=>{
-        console.log("you successfully connected to server");
+            y.innerHTML += "<div class='user'><img src='images/user.png'><div id='user'>"+x+"</div>      <div class='status'>"+user.statu+"</div></div>";
+
+        });
+        // names.forEach((name,index)=>{})
     });
 
     function online(){
-        socket.emit("SRC-OP");
+        socket.emit("SRC-OP",user);
         console.log("Searching for an opponent");
         document.querySelector(".exit").style.display = "none";
 
@@ -234,7 +253,8 @@
             }else{
 
             document.querySelector(".body").style.display = "none";
-
+            
+            user.statu="searching";
 
             socket.emit("searching");
 
@@ -243,40 +263,47 @@
             // document.querySelector("#chess-game").style.display = "none";
             socket.on("player-num",(playerNum, rom, nm)=>{
                 r00m++;
+                console.log(r00m);
                 room = rom;
+                user.room = rom;
                 if(r00m==1){
                     console.log(playerNum, rom);
-                    if(playerNum==2){//if you are the second player
+                    if(playerNum==2&&nm.length>1){//if you are the second player
                         console.log("you are the second player");
                         player1='b';
                         player2='w';
                         document.querySelector(".loading").style.display = "none";
                         document.querySelector(".chess-board").style.transform = "rotate(180deg)";
-                        document.querySelector(".name1").innerHTML = nm[1];
-                        document.querySelector(".name2").innerHTML = nm[0];
+                        document.querySelector(".name1").innerHTML = nm[1].name;
+                        document.querySelector(".name2").innerHTML = nm[0].name;
                         document.querySelectorAll(".box img").forEach(elem=>{
                             elem.style.transform = "rotate(180deg)";
                         })
                         document.querySelectorAll("span").forEach(elem=>{
                             elem.style.transform = "rotate(180deg)";
                         })
+                        user.statu="playing";
+                        socket.off("player-num");
+                        socket.off("num-of-users");
                         socket.emit("playing");
-                        
                         const chess = new Chess();
                         online1V1(chess);
                         clearInterval(InId);
 
                     }
-                }else if(r00m==2){//if your Opponent is present
+                }else if(r00m==2&&nm.length>1){//if your Opponent is present
                     console.log("you are the frist player player");
                     document.querySelector(".loading").style.display = "none";
-                    document.querySelector(".name1").innerHTML = nm[0];
-                    document.querySelector(".name2").innerHTML = nm[1];
+                    document.querySelector(".name1").innerHTML = nm[0].name;
+                    document.querySelector(".name2").innerHTML = nm[1].name;
+                    user.statu="playing";
+                    socket.off("player-num");
+                    socket.off("num-of-users");
                     socket.emit("playing");
                     const chess = new Chess();
                     online1V1(chess);
                     clearInterval(InId);
-
+                    
                 }
             });
             let InId = setInterval(()=>{
@@ -301,6 +328,9 @@
     }
 
     function offline2(){
+        
+        document.querySelector(".name1").innerHTML = user.name;
+        document.querySelector(".name2").innerHTML = "AI";
 
         document.querySelector(".body").style.display = "none";
         aiMode=true;
@@ -313,6 +343,9 @@
 
     function offline1(){
 
+        document.querySelector(".name1").innerHTML = "Player1";
+        document.querySelector(".name2").innerHTML = "Player2";
+        
         document.querySelector(".body").style.display = "none";
         aiMode=false;
         disc=true;
@@ -323,14 +356,30 @@
     }
 
     function exit(){
-        socket.disconnect()
+        if(player1=="b"){
+            document.querySelector(".loading").style.display = "none";
+            document.querySelector(".chess-board").style.transform = "rotate(180deg)";
+            document.querySelector(".name1").innerHTML = user.name;
+            document.querySelector(".name2").innerHTML = "";
+            document.querySelectorAll(".box img").forEach(elem=>{
+                elem.style.transform = "rotate(180deg)";
+            })
+            document.querySelectorAll("span").forEach(elem=>{
+                elem.style.transform = "rotate(180deg)";
+            })
+        }
+        socket.off("op-disconnect");
         player1='w';
         player2='b';
         disc=false;
         aiMode = false;
-        r00m = 0, room;
+        r00m = 0, room="";
+        user.room = "";
         castel = true;
         Ctype = 0;
+        user.opponent="";
+        user.statu = "online";
+        socket.emit("empty-names");
         document.querySelector(".body").style.display = "inline-block";
         document.querySelector("#chess-game").style.display = "none";
     }
